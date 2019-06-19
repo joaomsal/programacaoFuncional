@@ -52,6 +52,5 @@ adicionaPedido mesa (c,q) pedidoMesa =  inicio ++ ((maka getMesa):fim)
           inicio = init(take mesa pedidoMesa)
           fim = drop mesa pedidoMesa
           resto = [mesa| mesa<-getMesa, c /= (fst mesa)]
-          maka (pedido:getMesa) = if (fst pedido) == c then (fst pedido,(snd pedido)+q ):getMesa else pedido:getMesa
+          maka (pedido:getMesa) = if (fst pedido) == c then (fst pedido,(snd pedido)+q ):getMesa else pedido:getMesa ++ [(c,q)]
           maka [] = [(c,q)]
-          setMesa mesa (c,q) pedidoMesa = if getMesa == [] then [[(c,q)]] else [[(c,(snd mesa)+q)]| mesa<-getMesa, c == (fst mesa)]
