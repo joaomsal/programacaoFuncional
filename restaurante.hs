@@ -46,7 +46,11 @@ adicionaPedido m (c,q) pedidosMesas
 
 
 adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas  -> PedidosMesas
-adicionaPedido mesa item pedidos = [[inicio] ++ [editado] ++ [fim]]
-    where inicio = take (m-1) pedidos
-          editado = item 
-          fim = drop m pedidos
+adicionaPedido mesa (c,q) [] =  [[(c,q)]]
+adicionaPedido mesa (c,q) pedidoMesa = inicio ++ resto:(setMesa mesa (c,q) pedidoMesa)++ fim
+    where getMesa = last(take mesa pedidoMesa)
+          inicio = init(take mesa pedidoMesa)
+          fim = drop mesa pedidoMesa
+          resto = [mesa| mesa<-getMesa, c /= (fst mesa)]
+          maka (pedido:getMesa) = if (fst pedido) == c then (fst pedido,(snd pedido)+q ):getMesa else pedido:getMesa
+          setMesa mesa (c,q) pedidoMesa = if getMesa == [] then [[(c,q)]] else [[(c,(snd mesa)+q)]| mesa<-getMesa, c == (fst mesa)]
