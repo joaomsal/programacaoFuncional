@@ -32,25 +32,24 @@ coletaItemMenu :: Menu -> Codigo-> ItemRest
 coletaItemMenu menu c = head[(x,y,z) | (x,y,z)<- menu , x==c]
 
 --Questão 3.2 a) Adiciona um pedido de uma mesana lista de pedidos do restaurante
--- [(c,(snd pedido)+q) | pedidoMesa<-pedidosMesas, pedido<-pedidoMesa, (fst pedido)==c]
--- [xss ++ yss| (xss,yss) <-(splitAt m pedidosMesas) , pedido<-(last xss), (u,v)<-pedido, v+q ]
-{- adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas  -> PedidosMesas
-adicionaPedido m (c,q) [] = [[(c,q)]] 
-adicionaPedido m (c,q) (pedido:pedidosMesas) 
-    | pedido  /= [] = [pedido]
-    | otherwise = [] -}
-{- adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas  -> PedidosMesas
-adicionaPedido m (c,q) [] = [[(c,q)]] 
-adicionaPedido m (c,q) pedidosMesas 
-        | True = [ [(c,(snd pedidos)+q)] | pedidos<-head [ [pedido] | pedido <- last (fst (splitAt m pedidosMesas)), resto<- fst (splitAt m pedidosMesas)], c==(fst pedidos)]  -}
-
-
 adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas  -> PedidosMesas
 adicionaPedido mesa (c,q) [] =  [[(c,q)]]
-adicionaPedido mesa (c,q) pedidoMesa =  inicio ++ ((maka getMesa):fim)
+adicionaPedido mesa (c,q) pedidoMesa =  inicio ++ ((adc getMesa):fim)
     where getMesa = last(take mesa pedidoMesa)
           inicio = init(take mesa pedidoMesa)
           fim = drop mesa pedidoMesa
-          resto = [mesa| mesa<-getMesa, c /= (fst mesa)]
-          maka (pedido:getMesa) = if (fst pedido) == c then (fst pedido,(snd pedido)+q ):getMesa else pedido:getMesa ++ [(c,q)]
-          maka [] = [(c,q)]
+          adc (pedido:getMesa) = if (fst pedido) == c then (fst pedido,(snd pedido)+q ):getMesa else pedido:getMesa ++ [(c,q)]
+          adc [] = [(c,q)]
+
+-- b) Cancela pedido 
+cancelaPedido :: Mesa -> ItemCliente-> PedidosMesas -> PedidosMesas
+cancelaPedido mesa (c,q) pedidoMesa = inicio ++ ((remove getMesa):fim)
+    where getMesa = last(take mesa pedidoMesa)
+          inicio = init(take mesa pedidoMesa) 
+          fim = drop mesa pedidoMesa
+          remove [] = error "\nERROR: mesa vazia!"
+          remove (pedido:getMesa)
+            | (fst pedido /= c) = pedido:( remove getMesa)
+            | (fst pedido == c) && (snd pedido > q) = (fst pedido,(snd pedido)-q):getMesa 
+            | (fst pedido == c) && (snd pedido < q) = getMesa
+            | otherwise = getMesa
