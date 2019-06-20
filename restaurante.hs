@@ -34,12 +34,14 @@ coletaItemMenu menu c = head[(x,y,z) | (x,y,z)<- menu , x==c]
 --Questão 3.2 a) Adiciona um pedido de uma mesana lista de pedidos do restaurante
 adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas  -> PedidosMesas
 adicionaPedido mesa (c,q) [] =  [[(c,q)]]
-adicionaPedido mesa (c,q) pedidoMesa =  inicio ++ ((adc getMesa):fim)
+adicionaPedido mesa (c,q) pedidoMesa =  inicio ++ ((adiciona getMesa):fim)
     where getMesa = last(take mesa pedidoMesa)
           inicio = init(take mesa pedidoMesa)
           fim = drop mesa pedidoMesa
-          adc (pedido:getMesa) = if (fst pedido) == c then (fst pedido,(snd pedido)+q ):getMesa else pedido:getMesa ++ [(c,q)]
-          adc [] = [(c,q)]
+          adiciona (pedido:getMesa)
+            | (fst pedido /= c) = pedido:(adiciona getMesa)
+            | (fst pedido == c) = (fst pedido,(snd pedido)+q):getMesa 
+            | otherwise = getMesa
 
 -- b) Cancela pedido 
 cancelaPedido :: Mesa -> ItemCliente-> PedidosMesas -> PedidosMesas
