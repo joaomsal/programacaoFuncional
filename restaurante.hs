@@ -14,7 +14,7 @@ type PedidosMesas = [PedidoCliente]
 cardapio :: Menu
 cardapio = [(150, "Pastel", 1000), (15, "Agua", 400), (2, "Cerveja", 800), (40, "Picanha", 8850), (52, "Pudim", 1275)]
 pedidosRest :: PedidosMesas
-pedidosRest  =  [[(150,2),(2,2)],  [],  [],  [(40,1),(2,2),(52,2)], []]
+pedidosRest  =  [[(150,2),(2,2),(15,3)],  [],  [],  [(40,1),(2,2),(52,2)], []]
 
 -- Implementação das Funções 
 
@@ -61,10 +61,9 @@ pedidoCompletoMesa :: Mesa -> PedidosMesas -> Menu ->[(Quant, Nome, Preco)]
 pedidoCompletoMesa mesa pedidos menu = getPedido getMesa
     where getMesa = last(take mesa pedidos)
           getPedido [] = []
-          getPedido (pedido:pedidos) = [(codigo pedido, nome pedido, preco pedido)]++ (getPedido pedidos)
+          getPedido (pedido:pedidos) = [(snd pedido, nome pedido, preco pedido)]++ (getPedido pedidos)
           nome pedido = head [ b |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
           preco pedido =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
-          codigo pedido =  head [ a |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
 
 -- d) Total da conta de uma mesa
 totalMesa :: [(Quant, Nome, Preco)] -> Preco
@@ -81,9 +80,33 @@ formataPreco preco =  toString preco
           ponto n = if n > 0 then "."++ ponto (n-1) else ""
 -- b) Formatar pedido
 formataLinha :: (Quant,Nome,Preco) -> String
-formataLinha (q,n,p) = (saidaQt q) ++ n ++ (pontos n) ++ (saidaP p)
+formataLinha (q,n,p) = (saidaQt q) ++ n ++ (pontos n) ++ (saidaP p) 
     where saidaQt q = (esp (length (show q))) ++ show q++ " "
-          saidaP p = formataPreco p 
+          saidaP p = formataPreco p ++ "\n"
           pontos n = ponto (30 - (length n)) 
           ponto n = if n > 0 then "."++ ponto (n-1) else ""
           esp q = if q == 1 then " " else ""
+
+-- c) Formata lista de pedidos
+formataLinhas :: [(Quant,Nome,Preco)] -> String
+formataLinhas [] = ""
+formataLinhas (pedido:pedidos) = (formataLinha pedido) ++ (formataLinhas pedidos)
+-- d) Formata total conta
+formataTotal:: [(Quant,Nome,Preco)] -> String
+formataTotal mesa =  saida mesa
+    where saida mesa = "\n   Total"++ (ponto 25) ++ (formataPreco (total mesa)) ++ "\n"
+          total mesa = totalMesa mesa
+          ponto n = if n > 0 then "."++ ponto (n-1) else ""
+
+-- e) gera conta formatada
+geraConta:: Mesa -> PedidosMesas -> Menu -> IO ()
+geraConta mesa ped menu = putStr ("\n"++(formataPedidos mesa ped menu) ++ (formataT mesa ped menu))
+    where pedidoCompleto mesa ped menu = pedidoCompletoMesa mesa ped menu 
+          formataT mesa ped menu = formataTotal (pedidoCompleto mesa ped menu)
+          formataPedidos mesa ped menu = formataLinhas (pedidoCompleto mesa ped menu)
+
+-- f) libera mesa
+liberaMesa:: Mesa -> PedidosMesas -> PedidosMesas
+liberaMesa mesa pedidoMesa = inicio ++ [] ++ fim 
+    where inicio = init(take mesa pedidoMesa)
+          fim = drop mesa pedidoMesa
