@@ -14,7 +14,7 @@ type PedidosMesas = [PedidoCliente]
 cardapio :: Menu
 cardapio = [(150, "Pastel", 1000), (15, "Agua", 400), (2, "Cerveja", 800), (40, "Picanha", 8850), (52, "Pudim", 1275)]
 pedidosRest :: PedidosMesas
-pedidosRest  =  [[(150,1),(2,2)],  [],  [],  [(40,1),(2,2),(52,2)], []]
+pedidosRest  =  [[(150,2),(2,2)],  [],  [],  [(40,1),(2,2),(52,2)], []]
 
 -- Implementação das Funções 
 
@@ -55,3 +55,12 @@ cancelaPedido mesa (c,q) pedidoMesa = inicio ++ ((remove getMesa):fim)
             | (fst pedido == c) && (snd pedido > q) = (fst pedido,(snd pedido)-q):getMesa 
             | (fst pedido == c) && (snd pedido < q) = getMesa
             | otherwise = getMesa
+
+-- c) pedidos da mesa
+pedidoCompletoMesa :: Mesa -> PedidosMesas -> Menu ->[(Quant, Nome, Preco)]
+pedidoCompletoMesa mesa pedidos menu = [getPedido]
+    where getMesa = last(take mesa pedidos)
+          getPedido = (codigo getMesa, nome getMesa, preco getMesa)
+          nome (pedido:pedidos) = head [ b |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+          preco (pedido:pedidos) =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+          codigo (pedido:pedidos) =  head [ a |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
