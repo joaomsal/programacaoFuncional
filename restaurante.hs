@@ -58,9 +58,10 @@ cancelaPedido mesa (c,q) pedidoMesa = inicio ++ ((remove getMesa):fim)
 
 -- c) pedidos da mesa
 pedidoCompletoMesa :: Mesa -> PedidosMesas -> Menu ->[(Quant, Nome, Preco)]
-pedidoCompletoMesa mesa pedidos menu = [getPedido]
+pedidoCompletoMesa mesa pedidos menu = getPedido getMesa
     where getMesa = last(take mesa pedidos)
-          getPedido = (codigo getMesa, nome getMesa, preco getMesa)
-          nome (pedido:pedidos) = head [ b |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
-          preco (pedido:pedidos) =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
-          codigo (pedido:pedidos) =  head [ a |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+          getPedido [] = []
+          getPedido (pedido:pedidos) = [(codigo pedido, nome pedido, preco pedido)]++ (getPedido pedidos)
+          nome pedido = head [ b |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+          preco pedido =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+          codigo pedido =  head [ a |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
