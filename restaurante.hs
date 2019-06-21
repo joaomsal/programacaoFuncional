@@ -71,8 +71,19 @@ totalMesa :: [(Quant, Nome, Preco)] -> Preco
 totalMesa [] = 0
 totalMesa (pedido:pedidos) = sum  ([ p | (q,n,p)<-[pedido]]++[totalMesa pedidos])
 
--- Questão 3.3 a)
-
--- b)
+-- Questão 3.3 a) Formatar preço
+formataPreco :: Preco -> String
+formataPreco preco =  toString preco
+    where toString preco = imprime preco
+          imprime preco = ponto (7-(length (saida preco)))++ (saida preco)
+          saida preco = show (toDouble preco)++"0"
+          toDouble preco = (fromIntegral preco/100)
+          ponto n = if n > 0 then "."++ ponto (n-1) else ""
+-- b) Formatar pedido
 formataLinha :: (Quant,Nome,Preco) -> String
-formataLinha (q,n,p) = ""
+formataLinha (q,n,p) = (saidaQt q) ++ n ++ (pontos n) ++ (saidaP p)
+    where saidaQt q = (esp (length (show q))) ++ show q++ " "
+          saidaP p = formataPreco p 
+          pontos n = ponto (30 - (length n)) 
+          ponto n = if n > 0 then "."++ ponto (n-1) else ""
+          esp q = if q == 1 then " " else ""
