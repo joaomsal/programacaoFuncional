@@ -65,3 +65,14 @@ pedidoCompletoMesa mesa pedidos menu = getPedido getMesa
           nome pedido = head [ b |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
           preco pedido =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
           codigo pedido =  head [ a |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+
+-- d) Total da conta de uma mesa
+totalMesa :: [(Quant, Nome, Preco)] -> Preco
+totalMesa [] = 0
+totalMesa (pedido:pedidos) = sum  ([ p | (q,n,p)<-[pedido]]++[totalMesa pedidos])
+
+-- Questão 3.3 a)
+
+-- b)
+formataLinha :: (Quant,Nome,Preco) -> String
+formataLinha (q,n,p) = ""
