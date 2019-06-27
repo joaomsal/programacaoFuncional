@@ -36,3 +36,21 @@ removeItemMenu  (item:menu) cod
                         | otherwise =  [] ++ removeItemMenu menu cod
                     where verificaItem item c = [ (x,y,z) |(x,y,z) <- item , x/=c]
 
+-- c) Pega item do menu 
+coletaItemMenu :: Menu -> Codigo -> ItemRest
+coletaItemMenu (item:menu) cod 
+                        | verifica item cod = item
+                        | otherwise = coletaItemMenu menu cod
+                    where verifica (c,n,p) cod = c==cod
+
+-- Questçao 4.2 a) adicionar pedido a mesa 
+adicionaPedido:: Mesa->  ItemCliente ->  PedidosMesas -> PedidosMesas
+adicionaPedido _ (cod, qt) [] = []
+adicionaPedido mesa (cod, qt) (pedido:pedidos) 
+                        | getMesa == [] = inicio ++ [[(cod,qt)]] ++ fim
+                        | verifica cod == [True] = inicio ++ ([(cod,qt)]:[getMesa]) ++ fim
+                        | otherwise = inicio ++ (adicionaPedido mesa (cod,qt) pedidos) ++ fim
+                    where getMesa = last(take mesa pedidos)
+                          inicio = init(take mesa pedidos)
+                          fim = drop mesa pedidos
+                          verifica cod = [ True | (c,q)<-getMesa, cod /= c]
