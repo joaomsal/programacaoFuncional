@@ -53,3 +53,15 @@ adicionaPedido mesa (c,q) pedidos = inicio ++ ((mesaRecursiva getMesa):fim)
                   getMesa = last(take mesa pedidos)
                   inicio = init(take mesa pedidos)
                   fim = drop mesa pedidos
+
+-- b) cancela pedido
+cancelaPedido:: Mesa -> ItemCliente->   PedidosMesas -> PedidosMesas
+cancelaPedido mesa (c,q) pedidos = inicio ++ ((mesaRecursiva getMesa):fim)
+            where mesaRecursiva [] =  error "\nERROR: Item não encontrado!"
+                  mesaRecursiva (pedido:mesa)
+                        | (fst pedido) == c && (snd pedido) > q = (c, (snd pedido)-q):mesa
+                        | (fst pedido) == c && (snd pedido) <= q = mesa
+                        | otherwise = pedido:(mesaRecursiva mesa)
+                  getMesa = last(take mesa pedidos)
+                  inicio = init(take mesa pedidos)
+                  fim = drop mesa pedidos
