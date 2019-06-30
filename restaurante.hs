@@ -38,6 +38,7 @@ adicionaPedido mesa (c,q) pedidoMesa =  inicio ++ ((adiciona getMesa):fim)
     where getMesa = last(take mesa pedidoMesa)
           inicio = init(take mesa pedidoMesa)
           fim = drop mesa pedidoMesa
+          adiciona [] = [(c,q)]
           adiciona (pedido:getMesa)
             | (fst pedido /= c) = pedido:(adiciona getMesa)
             | (fst pedido == c) = (fst pedido,(snd pedido)+q):getMesa 
