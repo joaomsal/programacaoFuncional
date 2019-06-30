@@ -44,13 +44,36 @@ coletaItemMenu (item:menu) cod
                     where verifica (c,n,p) cod = c==cod
 
 -- Questçao 4.2 a) adicionar pedido a mesa 
+-- adicionaPedido:: Mesa->  ItemCliente ->  PedidosMesas -> PedidosMesas
+-- adicionaPedido mesa (cod, qt) (pedido:pedidos)
+--                         | getMesa == [] = inicio ++ [[(cod,qt)]] ++ fim
+--                         | pedidos == [] = inicio ++ pedido:[[(cod,qt)]] ++ fim
+--                         | verifica cod == [True] = inicio ++ [[(cod,qt+(snd (head pedido)))]]++ fim
+--                         | otherwise = inicio ++ (adicionaPedido mesa (cod,qt) pedidos) ++ fim
+--                     where getMesa = last(take mesa pedidos)
+--                           inicio = init(take mesa pedidos)
+--                           fim = drop mesa pedidos
+--                           verifica cod = [ True | (c,q)<-getMesa, cod /= c]
+
+-- tentativa 2
+
+
+-- adicionaPedido:: Mesa->  ItemCliente ->  PedidosMesas -> PedidosMesas
+-- adicionaPedido mesa (cod,qt) [] =  [[(cod,qt)]]
+-- adicionaPedido mesa (cod,qt) pedidos
+--                 | (fst (head (getMesa))) == cod = inicio ++ ([(fst (head (getMesa)), (qt + snd (head (getMesa))))]:[getMesa]) ++ fim
+--                 | otherwise = (adicionaPedido mesa (cod,qt) pedidos)
+--         where  inicio = init(take mesa pedidos);
+--                getMesa = last(take mesa pedidos);
+--                fim = drop mesa pedidos;
+
+-- tentativa 3
 adicionaPedido:: Mesa->  ItemCliente ->  PedidosMesas -> PedidosMesas
-adicionaPedido _ (cod, qt) [] = []
-adicionaPedido mesa (cod, qt) (pedido:pedidos) 
-                        | getMesa == [] = inicio ++ [[(cod,qt)]] ++ fim
-                        | verifica cod == [True] = inicio ++ ([(cod,qt)]:[getMesa]) ++ fim
-                        | otherwise = inicio ++ (adicionaPedido mesa (cod,qt) pedidos) ++ fim
-                    where getMesa = last(take mesa pedidos)
-                          inicio = init(take mesa pedidos)
-                          fim = drop mesa pedidos
-                          verifica cod = [ True | (c,q)<-getMesa, cod /= c]
+adicionaPedido mesa (c,q) pedidos  = inicio ++ ((mesaRecursiva getMesa):fim)
+            where mesaRecursiva [] =  [(c,q)]
+                  mesaRecursiva (pedido:mesa)
+                        | (fst pedido) == c = (c, (snd pedido)+q):mesa
+                        | otherwise = pedido:(mesaRecursiva mesa)
+                  getMesa = last(take mesa pedidos)
+                  inicio = init(take mesa pedidos)
+                  fim = drop mesa pedidos
