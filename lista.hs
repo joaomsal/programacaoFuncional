@@ -1,4 +1,5 @@
--- Lista Programação Funcional
+-- 201600016896 - JOÃO MANOEL SANTOS ALMEIDA 
+-- Lista Programação Funcional (TURMA 05)
 -- Questão 1 :
 -- a) Quatro iguais
 quatroIguais :: Int -> Int -> Int -> Int -> Bool

@@ -50,7 +50,7 @@ cancelaPedido mesa (c,q) pedidoMesa = inicio ++ ((remove getMesa):fim)
     where getMesa = last(take mesa pedidoMesa)
           inicio = init(take mesa pedidoMesa) 
           fim = drop mesa pedidoMesa
-          remove [] = error "\nERROR: mesa vazia!"
+          remove [] = error "\nERROR: Item não encontrado!"
           remove (pedido:getMesa)
             | (fst pedido /= c) = pedido:( remove getMesa)
             | (fst pedido == c) && (snd pedido > q) = (fst pedido,(snd pedido)-q):getMesa 
