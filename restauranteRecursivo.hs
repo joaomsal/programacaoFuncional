@@ -32,12 +32,13 @@ adicionaItemMenu (item:menu) (cod,nome,preco)
 removeItemMenu :: Menu -> Codigo -> Menu
 removeItemMenu [] _ = []
 removeItemMenu  (item:menu) cod 
-                        | (verificaItem [item] cod) /= [] = [item] ++ removeItemMenu menu cod
-                        | otherwise =  [] ++ removeItemMenu menu cod
-                    where verificaItem item c = [ (x,y,z) |(x,y,z) <- item , x/=c]
+                        | verifica item cod = [] ++ removeItemMenu menu cod
+                        | otherwise =  [item] ++ removeItemMenu menu cod
+                    where verifica (c,n,p) cod = c==cod
 
 -- c) Pega item do menu 
 coletaItemMenu :: Menu -> Codigo -> ItemRest
+coletaItemMenu [] cod = error "\nERROR: Item não encontrado!"
 coletaItemMenu (item:menu) cod 
                         | verifica item cod = item
                         | otherwise = coletaItemMenu menu cod
@@ -75,4 +76,10 @@ pedidoCompletoMesa mesa pedidos menu = pedidoRecursivo getMesa
                   pre pedido =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
                   pedidoRecursivo [] = []
                   pedidoRecursivo (pedido:getMesa)  = [((snd pedido), (pro pedido), (pre pedido))] ++ (pedidoRecursivo getMesa)
+
+-- d) total mesa
+totalMesa :: [(Quant, Nome, Preco)] -> Preco
+totalMesa [] = 0
+totalMesa (pedido:pedidos) = (getPreco [pedido]) + (totalMesa pedidos)
+    where getPreco pedido = head[ p | (q,n,p)<-pedido]
   
