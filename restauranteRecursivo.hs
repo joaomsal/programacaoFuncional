@@ -65,3 +65,14 @@ cancelaPedido mesa (c,q) pedidos = inicio ++ ((mesaRecursiva getMesa):fim)
                   getMesa = last(take mesa pedidos)
                   inicio = init(take mesa pedidos)
                   fim = drop mesa pedidos
+
+-- c) pedidos detalhado por mesa
+pedidoCompletoMesa :: Mesa -> PedidosMesas -> Menu -> [(Quant,Nome, Preco)]
+pedidoCompletoMesa mesa [] menu = []
+pedidoCompletoMesa mesa pedidos menu = pedidoRecursivo getMesa
+            where getMesa = last(take mesa pedidos)
+                  pro pedido = head [ b |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+                  pre pedido =  head [ c * (snd pedido) |  (a,b,c)<-[coletaItemMenu menu (fst pedido)], fst pedido == a]
+                  pedidoRecursivo [] = []
+                  pedidoRecursivo (pedido:getMesa)  = [((snd pedido), (pro pedido), (pre pedido))] ++ (pedidoRecursivo getMesa)
+  
