@@ -50,3 +50,22 @@ catMaiorMenorCod cat
                 | cat == "Massas" = (161,180)
                 | cat == "Acompanhamentos extras" = (181,200)
                 | cat == "Sobremesas" = (201,220)
+
+-- QUESTÃO 2
+-- ITEM a) ADICIONA PEDIDO
+adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas -> PedidosMesas
+adicionaPedido mesa (cod, qt) pedidos =   map (snd) adiciona --map (snd) mesas
+    where mesas = zip [1..] pedidos
+          getMesa = filter isMesa mesas
+          isMesa m = fst m == mesa
+          adiciona = map addMesa mesas
+          addMesa (m,p) 
+            | m == mesa = (m, addPed p)
+            | otherwise = (m,p)
+          addPed y 
+            | filter filtro y /= [] =  map add y
+            | otherwise = [(cod, qt)] ++ y
+          add (m,n) 
+            | m == cod = (cod, qt + n)
+            | otherwise = (m,n) 
+          filtro x = fst x == cod
