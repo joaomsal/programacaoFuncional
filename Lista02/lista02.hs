@@ -54,7 +54,7 @@ catMaiorMenorCod cat
 -- QUESTÃO 2
 -- ITEM a) ADICIONA PEDIDO
 adicionaPedido:: Mesa-> ItemCliente -> PedidosMesas -> PedidosMesas
-adicionaPedido mesa (cod, qt) pedidos =   map (snd) adiciona --map (snd) mesas
+adicionaPedido mesa (cod, qt) pedidos =   map (snd) adiciona 
     where mesas = zip [1..] pedidos
           getMesa = filter isMesa mesas
           isMesa m = fst m == mesa
@@ -69,3 +69,35 @@ adicionaPedido mesa (cod, qt) pedidos =   map (snd) adiciona --map (snd) mesas
             | m == cod = (cod, qt + n)
             | otherwise = (m,n) 
           filtro x = fst x == cod
+
+-- ITEM b) CANCELA PEDIDO
+cancelaPedido :: Mesa -> ItemCliente-> PedidosMesas -> PedidosMesas
+cancelaPedido mesa (cod, qt) pedidos = map (snd) cancela 
+      where mesas = zip [1..] pedidos
+            getMesa = filter isMesa mesas
+            isMesa m = fst m == mesa
+            cancela = map clMesa mesas
+            clMesa (m,p) 
+              | m == mesa = (m, exPed p)
+              | otherwise = (m,p)
+            exPed y 
+              | filter filtro y /= [] = filter items (map ex y)
+              | otherwise = [(cod, qt)] ++ y
+            ex (m,n) 
+              | m == cod && qt < n = (cod, n - qt)
+              | m == cod && qt >= n = (-1, 0)
+              | otherwise = (m,n) 
+            filtro x = fst x == cod
+            items x = fst x /= -1
+
+-- ITEM c) ORDENA DE PEDIDOS
+pedidoOrdenado:: Mesa -> PedidosMesas -> PedidosMesas
+pedidoOrdenado mesa pedidos = foldr insOrd [] getMesa
+  where mesas = zip [1..] pedidos
+        getMesa = filter isMesa mesas
+        isMesa m = fst m == mesa
+        insOrd:: Int-> [ItemCliente] -> [ItemCliente]
+        insOrd y [] = [y] 
+        insOrd y (z:zs) 
+              | y <= fst z = y : z : zs
+              | otherwise = z: insOrd y zs
