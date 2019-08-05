@@ -1,6 +1,6 @@
 -- Lista 02 - PROGRAMAÇÃO FUNCIONAL
 -- JOÃO MANOEL SANTOS ALMEIDA - 201600016896
-
+-- TURMA 05
 -- Definição dos tipos 
 type Codigo = Int
 type Nome = String

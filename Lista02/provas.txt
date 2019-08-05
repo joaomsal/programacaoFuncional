@@ -1,0 +1,58 @@
+-- JOÃO MANOEL SANTOS ALMEIDA - 201600016896
+-- PROVAS 
+-- QUESTÃO 5
+desconto :: Int->[Preco]-> [Preco]
+desconto _ [] = []
+desconto y (x:xs) = div (y*x) 100: desconto y xs
+
+-- ITEM a) sum(desconto y xs) = div (y * sum xs) 100
+CASO BASE : xs = []
+
+temos que:
+sum [] = 0
+sum (x:xs) = x + sum xs
+ao aplicar sum em (desconto y xs), temos:
+sum (div (y*x) 100: desconto y xs) -> a função desconto aplica o desconto em cada item 
+                                      de xs e retorna a lista com o desconto aplicado em
+                                      todos os valor. Ao aplicar a função sum no resultado
+                                      da função desconto, é obtido a soma dos valores  
+                                      descontados. Utilizando as propriedades matemáticas
+                                      de associatividade temos que: somar os valores de uma 
+                                      lista aplicando a função de desconto em cada um deles 
+                                      é o mesmo que somar os valores da lista e em seguida aplicar 
+                                      o desconto no resultado. Resultando em -> div (y * sum xs) 100
+                                        
+        aplicação da função ->         *Main> sum(desconto 50 [10,20,30])
+                                        30
+                                        *Main> div (50* sum [10,20,30]) 100
+                                        30
+
+
+-- ITEM b) sum((desconto y xs)) ++ (desconto  y  zs))  =  sum (desconto y xs) + sum (desconto y zs)
+
+CASO BASE : xs = [] e/ou ys = []
+
+temos que:
+sum [] = 0
+sum (x:xs) = x + sum xs  e
+(++) [] [] = []
+(++) xs [] = xs
+(++) [] ys = ys
+
+ao aplicar sum em: (desconto y xs)) ++ (desconto  y  zs) -> temos que: primeiro a função de desconto 
+                                                            seria aplicada em ambas as listas e em seguida
+                                                            o operador (++) concatenaria ambas as listas
+                                                            com o desconto aplicado. A função sum, é aplicada
+                                                            somando todos os valores da lista resultante da 
+                                                            concatenação. Com base nas propriedades da soma e 
+                                                            da concatenação, aplicar de forma separada o desconto
+                                                            seguido da sum em cada lista, é equivalente a aplicar 
+                                                            a sum nas listas descontadas e concatenadas.
+
+                   aplicação das funções ->                *Main> sum((descontox 50 [10,20]) ++ (descontox 50 [30]))
+                                                            30
+                                                            *Main> sum(descontox 50 [10,20]) + sum(descontox 50 [30])
+                                                            30
+
+
+                                       
