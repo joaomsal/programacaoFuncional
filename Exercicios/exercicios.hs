@@ -109,3 +109,11 @@ qtNums xs = (myLength.getNumbers) xs
 fstWord :: [Char] -> [Char]
 fstWord xs = takeWhile vazio xs
     where vazio x = x /= ' '
+
+-- FOLDR ou FOLDR1
+-- or em lista de bools
+myOr :: [Bool] -> Bool
+myOr xs = foldr1 (||) xs
+-- and em lista de bools
+myAnd :: [Bool] -> Bool
+myAnd xs = foldr1 (&&) xs
