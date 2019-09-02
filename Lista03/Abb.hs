@@ -82,8 +82,7 @@ minArv t
 cardapio :: Menu
 --cardapio =  (1,"pp",0) (2,"bb",0)  (2,"arw",1)
 cardapio = No (15, "Agua", 400) (No (2, "Cerveja", 800) NoNulo NoNulo) (No (161, "Pastel", 1000) (No (101, "Picanha", 8850) NoNulo NoNulo) (No (52, "Batata-Frita", 1275) NoNulo NoNulo))
-ca :: Menu
-ca = No (10,"pp",0) (No (3,"pp",0) NoNulo NoNulo) NoNulo
+
 -- RESPOSTAS DA LISTA
 -- QUESTÃO 2
 -- A) COLETA ITEM PELO COD
