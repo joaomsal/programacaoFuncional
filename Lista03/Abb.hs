@@ -1,3 +1,6 @@
+-- PROGRAMAÇÃO FUNCIONAL (T05)
+-- JOÃO MANOEL SANTOS ALMEIDA - 201600016896
+
 module Abb(Arv, arvVazia, ehVazia, ehNoNulo, arvEsq, arvDir, infoNo, insereNo, removeNo) where
 -- TIPOS DO CARDÁPIO
 type Codigo = Int
